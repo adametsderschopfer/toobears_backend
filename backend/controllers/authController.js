@@ -10,11 +10,13 @@ export const register = async (req, res, next) => {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(req.body.password, salt)
 
+
         const newUser = new User({
 
             username: req.body.username,
             surname: req.body.surname,
             email: req.body.email,
+            role: req.body.role,
             password: hash
 
         })
@@ -34,6 +36,9 @@ export const login = async (req, res, next) => {
 
         const user =  await User.findOne({email: req.body.email})
         if(!user) return next(createError(404, "Пользователь не найден"))
+
+        const role = await User.findOne({role: req.body.role})
+        if(!role) return next((403, "Нет доступа") )
 
         const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password)
         if(!isPasswordCorrect) return next(createError(400, "Неправильный пароль или email"))
