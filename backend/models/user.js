@@ -22,15 +22,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-
-    isAdmin:{
-        type: Boolean,
-        default: false,
-    },
-
-    isSeller:{
-        type: Boolean,
-        default: false
+    
+    role:{
+        type: String,
+        default:"User"
     }
 },
 
@@ -38,4 +33,4 @@ const UserSchema = new mongoose.Schema({
 
 )
 
-export default mongoose.model("USer", UserSchema)
+export default mongoose.model("User", UserSchema)
