@@ -1,0 +1,18 @@
+const env = {
+	NODE_ENV: 'production',
+	
+	PORT: 4444,
+	JWT_SECRET_KEY: 'secretkey',
+	DB_URI: 'mongodb+srv://',
+}
+
+module.exports = {
+	apps: [
+		{
+			name: 'bears',
+			script: 'npm',
+			args: 'start',
+			env: env
+		}
+	]
+};
