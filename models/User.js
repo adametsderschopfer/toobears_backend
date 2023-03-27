@@ -79,6 +79,10 @@ const UserSchema = new mongoose.Schema({
     vkUrl:{
         type: String
     },
+    country:{
+        type: String,
+        default: ''
+    },
 }, {
     timestamps: true,
 });

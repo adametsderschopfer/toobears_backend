@@ -167,6 +167,7 @@ export const updateUser = async (req, res) => {
             description: req.body.description,
             username: req.body.username,
             surname: req.body.surname,
+            country: req.body.country,
             fbUrl: req.body.fbUrl,
             tgUrl: req.body.tgUrl,
             instUrl: req.body.instUrl,
