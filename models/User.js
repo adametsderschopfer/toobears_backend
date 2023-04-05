@@ -1,15 +1,16 @@
 import mongoose from "mongoose";
+import { sendRegistration, notifyChangePassword } from '../mailer/user.js';
 
 const UserSchema = new mongoose.Schema({
-    username:{
+    username: {
         type: String,
         required: true,
     },
-    surname:{
+    surname: {
         type: String,
         required: true,
     },
-    email:{
+    email: {
         type: String,
         required: true,
         unique: true,
@@ -29,33 +30,33 @@ const UserSchema = new mongoose.Schema({
         type: String,
         optional: true,
     },
-    code:{
+    code: {
         type: String,
     },
     cards: [{
         type: mongoose.Schema.ObjectId,
         ref: 'Card'
     }],
-    liked:[{
+    liked: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Card',
     }],
-    role:{
+    role: {
         type: String,
         default: 'Seller'
     },
-    bannerUrl:{
+    bannerUrl: {
         type: String,
     },
-    status:{
+    status: {
         type: String,
         default: '',
     },
-    description:{
+    description: {
         type: String,
         default: ''
     },
-    subscribe:[{
+    subscribe: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: this
     }],
@@ -63,28 +64,41 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    subscribed:[{
+    subscribed: [{
         type: mongoose.Schema.ObjectId,
         ref: this
     }],
-    fbUrl:{
+    fbUrl: {
         type: String
     },
-    tgUrl:{
+    tgUrl: {
         type: String
     },
-    instUrl:{
+    instUrl: {
         type: String
     },
-    vkUrl:{
+    vkUrl: {
         type: String
     },
-    country:{
+    country: {
         type: String,
         default: ''
     },
 }, {
     timestamps: true,
+});
+
+
+UserSchema.post('save', async (user) => {
+    sendRegistration(user);
+});
+
+UserSchema.post('updateOne', async function() {
+    const filter = this.getFilter();
+    const userModel = await this.model.findOne(filter);
+    if (this._update.$set.passwordHash) {
+        notifyChangePassword(userModel);
+    }
 });
 
 export default mongoose.model('User', UserSchema)
