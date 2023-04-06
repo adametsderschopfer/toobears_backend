@@ -10,6 +10,7 @@ import * as ChatsController from './controllers/ChatsController.js'
 import * as OrderController from './controllers/OrderController.js'
 import * as FeedController from './controllers/FeedController.js'
 import handleValidErrors from "./utils/handleValidErrors.js"
+import transporter from './mailer/index.js';
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
@@ -22,17 +23,17 @@ mongoose.connect(process.env.DB_URI)
 
 // const privateKey = fs.readFileSync('utils/www.toobears.com_custom_1.key', 'utf8')
 // const cert = fs.readFileSync('utils/www.toobears.com_custom_1.crtca', 'utf8')
-// const credentials = {key: privateKey, cert: cert}    
+// const credentials = {key: privateKey, cert: cert}
 // const httpsServer = https.createServer(credentials, app)
 
 const app = express();
 
 const storage = multer.diskStorage({
     destination: (req, res, cb) => {
-    	const patch = 'uploads/'+req.userId+'/'
-    	if (!fs.existsSync(patch)) {
-    		fs.mkdirSync(patch)
-    	}
+        const patch = 'uploads/' + req.userId + '/'
+        if (!fs.existsSync(patch)) {
+            fs.mkdirSync(patch)
+        }
         cb(null, patch)
     },
     filename: (req, files, cb) => {
@@ -67,7 +68,7 @@ app.get('/users/me/subscribed', checkAuth, UserController.getMySubs)
 
 app.post('/upload', checkAuth, upload.array('images', 6), (req, res) => {
     res.json({
-        urls : req.files.map(function(file){
+        urls: req.files.map(function (file) {
             return `/uploads/${req.userId}/${file.originalname}`
         })
 
@@ -87,8 +88,8 @@ app.post('/upload/avatar', checkAuth, upload.single('avatar'), (req, res) => {
 })
 
 app.post('/payment-handler/', (req, res) => {
-	console.log('PAYMENT HANDLER')
-	console.log(req.body)
+    console.log('PAYMENT HANDLER')
+    console.log(req.body)
 })
 
 app.get('/chats', checkAuth, ChatsController.getAll)
@@ -99,13 +100,13 @@ app.post('/chats', checkAuth, async (req, res) => {
 
 app.get('/market', CardController.getAll)
 app.get('/market/:id', CardController.getOne)
-app.post('/market', checkAuth, handleValidErrors, cardCreateValidation ,CardController.create)
-app.delete('/market/:id', checkAuth , CardController.remove)
-app.patch('/market/:id', checkAuth , handleValidErrors, CardController.update)
+app.post('/market', checkAuth, handleValidErrors, cardCreateValidation, CardController.create)
+app.delete('/market/:id', checkAuth, CardController.remove)
+app.patch('/market/:id', checkAuth, handleValidErrors, CardController.update)
 app.get('/market/user/me', checkAuth, CardController.getMyCards)
-app.patch('/market/:id/like', checkAuth, CardController.like, )
-app.delete('/market/:id/like', checkAuth, CardController.likeDelete, )
-app.delete('/market/:id/likeremove', checkAuth, CardController.likeDelete, ) // deprecated
+app.patch('/market/:id/like', checkAuth, CardController.like,)
+app.delete('/market/:id/like', checkAuth, CardController.likeDelete,)
+app.delete('/market/:id/likeremove', checkAuth, CardController.likeDelete,) // deprecated
 app.get('/market/user/me/liked', checkAuth, CardController.getMyFavoriteCards)
 app.get('/market/cards/:id', CardController.getUserCards)
 
@@ -130,7 +131,7 @@ chats.run(server)
 // });
 
 server.listen(process.env.PORT || 4444, (err) => {
-    if(err) {
+    if (err) {
         return console.log(err)
     }
     console.log('runned 4444')

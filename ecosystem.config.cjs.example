@@ -1,16 +1,20 @@
 const env = {
 	NODE_ENV: 'production',
-	
+
 	PORT: 4444,
 	JWT_SECRET_KEY: 'secretkey',
 	DB_URI: 'mongodb+srv://',
+	SMTP_HOST: "SMTP_HOST",
+	SMTP_PORT: 0,
+	SMTP_USER: 'SMTP_USER',
+	SMTP_USER_PASS: 'SMTP_USER_PASS'
 }
 
 module.exports = {
 	apps: [
 		{
 			name: 'bears',
-			script: 'npm',
+			script: './index.js',
 			args: 'start',
 			env: env
 		}
