@@ -45,7 +45,7 @@ export const get = async (req, res) => {
                     users[event.user] = await UserModel.findById(event.user)
                         .select('username surname avatarUrl shortlink')
                 }
-                if (event.type == 'User') {
+                if (event.type == 'user') {
                     if (users[event.entity]) {
                         return (true)
                     }
@@ -53,7 +53,7 @@ export const get = async (req, res) => {
                         .select('username surname avatarUrl shortlink')
                     return (true)
                 }
-                if (event.type == 'Card') {
+                if (event.type == 'card') {
                     if (cards[event.entity]) {
                         return (true)
                     }

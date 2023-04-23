@@ -244,7 +244,7 @@ export const like = async (req, res) => {
     const event = new FeedEventModel({
         user: req.userId,
         event: 'like',
-        type: 'Card',
+        type: 'card',
         entity: req.params.id
     })
     event.save()

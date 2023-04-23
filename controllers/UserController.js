@@ -221,7 +221,7 @@ export const subscribe = async (req, res) => {
         const event = new FeedEventModel({
             user: req.userId,
             event: 'subscribe',
-            type: 'User',
+            type: 'user',
             entity: req.params.id
         })
         event.save()
