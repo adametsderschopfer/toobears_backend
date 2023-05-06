@@ -65,7 +65,14 @@ export const create = async (req, res) => {
         const doc = new OrderModel({
             card: req.body.card,
             buyer: req.userId,
-            seller: card.author
+            seller: card.author,
+            shippingName: req.body.shippingName,
+            shippingContry: req.body.shippingContry,
+            shippingCity: req.body.shippingCity,
+            shippingState: req.body.shippingState,
+            shippingAddress: req.body.shippingAddress,
+            shippingPortalCode: req.body.shippingPortalCode,
+            shippingPhone: req.body.shippingPhone,
         })
 
         const post = await doc.save()

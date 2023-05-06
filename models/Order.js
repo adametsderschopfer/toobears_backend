@@ -17,6 +17,34 @@ const OrderSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    shippingName: {
+        type: String,
+        default: '',
+    },
+    shippingContry: {
+        type: String,
+        default: '',
+    },
+    shippingCity: {
+        type: String,
+        default: '',
+    },
+    shippingState: {
+        type: String,
+        default: '',
+    },
+    shippingAddress: {
+        type: String,
+        default: '',
+    },
+    shippingPortalCode: {
+        type: String,
+        default: '',
+    },
+    shippingPhone: {
+        type: String,
+        default: '',
+    },
     status: {
         type: Number,
         default: 0
@@ -29,9 +57,9 @@ const OrderSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-OrderSchema.post('save', async (order) => {
+OrderSchema.post('save', async function (order) {
     const foundOrder = await Order.findById(order._id).populate('buyer seller', 'username email');
-    if (this._update.$set.status === 3) {
+    if (this._update && this._update.$set.status === 3) {
         notifyBuyerMakeOrder(foundOrder);
         notifySellerMakeOrder(foundOrder);
     }
