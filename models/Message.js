@@ -11,7 +11,7 @@ const MessageSchema = new mongoose.Schema({
         type: String,
     },
     time:{
-        type: Date,
+        type: mongoose.Schema.Types.Mixed,
         default: Date.now,
     },
     attachment:{
