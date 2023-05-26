@@ -48,7 +48,7 @@ export const getOne = async (req, res) => {
     try {
 
         const cardId = req.params.id
-        const card = await CardModel.findByIdAndUpdate( 
+        const card = await CardModel.findByIdAndUpdate(
         {
             _id: cardId,
         },
@@ -67,7 +67,7 @@ export const getOne = async (req, res) => {
 export const remove = async (req, res) => {
     try {
         const cardId = req.params.id
-        
+
         CardModel.findOneAndDelete({
               _id: cardId,
               author: req.userId,
@@ -91,7 +91,7 @@ export const remove = async (req, res) => {
                 })
 
             })
-        
+
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -114,6 +114,8 @@ export const create = async (req, res) => {
             author: req.userId,
             currency: req.body.currency,
             symbol: req.body.symbol,
+            paymentDescription: req.body.paymentDecsription,
+            deliveryDescription: req.body.deliveryDecsription,
             delivery: [{
                 destPrice: req.body.destPrice,
                 destination: req.body.destination,
@@ -147,7 +149,7 @@ export const create = async (req, res) => {
 export const update = async (req, res) => {
     try {
         const cardId = req.params.id;
-        
+
         await CardModel.updateOne({
             _id: cardId,
             author: req.userId,

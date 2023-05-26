@@ -111,6 +111,7 @@ app.get('/market/user/me/liked', checkAuth, CardController.getMyFavoriteCards)
 app.get('/market/cards/:id', CardController.getUserCards)
 
 app.get('/orders', checkAuth, OrderController.get)
+app.get('/orders/:id', checkAuth, OrderController.getItem)
 app.post('/orders', checkAuth, OrderController.create)
 app.patch('/orders/:id/delivery', checkAuth, OrderController.updateDelivery)
 app.delete('/orders/:id', checkAuth, OrderController.remove)

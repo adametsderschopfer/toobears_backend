@@ -25,6 +25,27 @@ export const get = async (req, res) => {
     }
 }
 
+export const getItem = async (req, res) => {
+  try {
+    const orders = await OrderModel.find({
+        _id: req.params.id,
+        $or: [
+            { buyer: req.userId },
+            { seller: req.userId }
+        ],
+        status: req.query.status || { $in: [ 0, 1, 2 ] }
+    }).populate('card').sort({
+        createdAt: -1,
+    }).exec()
+    res.json(orders)
+  } catch (error) {
+    console.log(err);
+        res.status(500).json({
+            message: 'Не удалось получить заказы'
+        })
+  }
+}
+
 export const remove = async (req, res) => {
     try {
         OrderModel.findOneAndDelete({
@@ -49,7 +70,7 @@ export const remove = async (req, res) => {
                 })
 
             })
-        
+
     } catch (err) {
         console.log(err);
         res.status(500).json({

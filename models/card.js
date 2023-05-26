@@ -52,6 +52,12 @@ const CardSchema = new mongoose.Schema({
         type: String,
         default: 'USD'
     },
+    deliveryDescription: {
+        type: String,
+    },
+    paymentDescription: {
+        type: String,
+    },
     symbol:{
         type: String,
         default: '$',
