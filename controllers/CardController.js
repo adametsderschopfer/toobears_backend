@@ -164,6 +164,8 @@ export const update = async (req, res) => {
             imgUrl: req.body.imgUrl,
             currency: req.body.currency,
             symbol: req.body.symbol,
+            paymentDescription: req.body.paymentDecsription,
+            deliveryDescription: req.body.deliveryDecsription,
             delivery: [{
                 destPrice: req.body.destPrice,
                 destination: req.body.destination,

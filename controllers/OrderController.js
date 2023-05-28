@@ -34,7 +34,11 @@ export const getItem = async (req, res) => {
             { seller: req.userId }
         ],
         status: req.query.status || { $in: [ 0, 1, 2 ] }
-    }).populate('card').sort({
+    })
+    .populate('buyer', 'username surname')
+    .populate('seller', 'username surname')
+    .populate('card')
+    .sort({
         createdAt: -1,
     }).exec()
     res.json(orders)
@@ -94,6 +98,7 @@ export const create = async (req, res) => {
             shippingAddress: req.body.shippingAddress,
             shippingPortalCode: req.body.shippingPortalCode,
             shippingPhone: req.body.shippingPhone,
+            message: req.body.message,
         })
 
         const post = await doc.save()
