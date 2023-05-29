@@ -21,7 +21,7 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    shippingContry: {
+    shippingCountry: {
         type: String,
         default: '',
     },
@@ -52,6 +52,9 @@ const OrderSchema = new mongoose.Schema({
     deliveryCode: {
         type: String,
         default: ''
+    },
+    message: {
+        type: String,
     },
 }, {
     timestamps: true,
