@@ -1,29 +1,40 @@
 import transporter from './index.js';
+import { readSource } from './reader.js';
 
 export async function notifyBuyerMakeOrder(order) {
+  const html = await readSource('./templates/order/buyer-notification.html');
+
+  const htmlContent = html
+  .replaceAll('{URL_NAME_ORDER}', order._id)
+  .replaceAll('{URL_NAME_SELLER}', order.seller.username)
+  .replaceAll('{URL_NAME_SHOP}', order.seller.shopname)
+  .replaceAll('{URL_IMAGE_ORDER}', `${process.env.currentDomain}${order.card.imgUrl?.[0]}`)
+  .replaceAll('{URL_TO_ORDER}', `${process.env.currentDomain}/orderInfo/${order._id}`);
+
   const mailOptions = {
     from: process.env.SMTP_USER,
     to: order.buyer.email,
     subject: 'New Order',
-    text: `Hi, A new order has been placed with the following details:
-    Customer Name: ${order.buyer.username}
-    Customer Email: ${order.buyer.email}
-    Please log in to the admin panel to view the details of the order.
-    `,
+    html: htmlContent,
   };
   await transporter.sendMail(mailOptions);
 }
 
 export async function notifySellerMakeOrder(order) {
+  const html = await readSource('./templates/order/buyer-notification.html');
+
+  const htmlContent = html
+    .replaceAll('{URL_IMAGE_ORDER}', `${process.env.currentDomain}${order.card?.imgUrl?.[0]}`)
+    .replaceAll('{URL_TO_ORDER}', `${process.env.currentDomain}/orderInfo/${order._id}`)
+    .replaceAll('{URL_NAME_BUYER}', `${process.env.currentDomain}/orderInfo/${order.buyer.username}`)
+    .replaceAll('{URL_COUNTRY_BUYER}', `${process.env.currentDomain}/orderInfo/${order.buyer.country}`)
+    .replaceAll('{URL_NAME}', `${process.env.currentDomain}/orderInfo/${order._id}`);
+
   const mailOptions = {
     from: process.env.SMTP_USER,
     to: order.seller.email,
     subject: 'New Order',
-    text: `Hi, A new order has been placed with the following details by ${order.buyer.username}:
-    Customer Name: ${order.buyer.username}
-    Customer Email: ${order.buyer.email}
-    Please log in to the admin panel to view the details of the order.
-    `,
+    html: htmlContent
   };
   await transporter.sendMail(mailOptions);
 }

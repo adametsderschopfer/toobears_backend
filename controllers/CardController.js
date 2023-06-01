@@ -123,11 +123,11 @@ export const create = async (req, res) => {
             }],
         })
 
-        await UserSchema.findByIdAndUpdate(req.userId,{
-            $push: {cards: doc},
-        })
-
         const post = await doc.save()
+
+        await UserSchema.findByIdAndUpdate(req.userId,{
+            $push: {cards: post._id},
+        })
 
         const event = new FeedEventModel({
             user: req.userId,

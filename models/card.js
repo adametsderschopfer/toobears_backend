@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import UserModel from "./User.js";
+import { notifySubscriberCreateNewCard } from "../mailer/user.js";
 
 
 const CardSchema = new mongoose.Schema({
@@ -80,4 +82,13 @@ const CardSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-export default mongoose.model('Card', CardSchema)
+CardSchema.post('save', async (card) => {
+    const currentCard = await Card.findById(card._id).populate('author', 'subscribed imgUrl name').populate('name imgUrl');
+    currentCard.author.subscribed.forEach(async (subscriber) => {
+        const user = await UserModel.findById(subscriber._id).populate('email username');
+        await notifySubscriberCreateNewCard(user, currentCard);
+    })
+});
+
+const Card = mongoose.model('Card', CardSchema)
+export default Card;
