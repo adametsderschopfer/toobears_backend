@@ -10,4 +10,13 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// verify connection configuration
+transporter.verify(function(error, success) {
+  if (error) {
+       console.log(error);
+  } else {
+       console.log(`mail server has been started on HOST ${process.env.SMTP_HOST}`);
+  }
+});
+
 export default transporter;
