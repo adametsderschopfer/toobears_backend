@@ -140,3 +140,23 @@ export const updateDelivery = async (req, res) => {
         })
     }
 }
+
+export const update = async (req, res) => {
+    try {
+        await OrderModel.updateOne({
+            _id: req.params.id
+        }, {
+            status: req.body.status,
+        })
+
+        res.json({
+            success: true,
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: 'Не удалось обновить заказ'
+        })
+    }
+}
+
