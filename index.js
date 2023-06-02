@@ -113,6 +113,7 @@ app.get('/market/cards/:id', CardController.getUserCards)
 app.get('/orders', checkAuth, OrderController.get)
 app.get('/orders/:id', checkAuth, OrderController.getItem)
 app.post('/orders', checkAuth, OrderController.create)
+app.patch('/orders', checkAuth, OrderController.update)
 app.patch('/orders/:id/delivery', checkAuth, OrderController.updateDelivery)
 app.delete('/orders/:id', checkAuth, OrderController.remove)
 
