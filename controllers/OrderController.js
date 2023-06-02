@@ -92,7 +92,7 @@ export const create = async (req, res) => {
             buyer: req.userId,
             seller: card.author,
             shippingName: req.body.shippingName,
-            shippingContry: req.body.shippingContry,
+            shippingCountry: req.body.shippingCountry,
             shippingCity: req.body.shippingCity,
             shippingState: req.body.shippingState,
             shippingAddress: req.body.shippingAddress,
