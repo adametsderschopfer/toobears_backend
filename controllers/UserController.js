@@ -5,11 +5,11 @@ import UserModel from "../models/User.js";
 import FeedEventModel from "../models/FeedEvent.js"
 
 export const register = async (req, res) => {
-    try { 
+    try {
      const password = req.body.password;
      const salt = await bcrypt.genSalt(10);
      const hash = await bcrypt.hash(password, salt);
- 
+
      const doc = new UserModel({
          role: req.body.role,
          username: req.body.username,
@@ -17,22 +17,22 @@ export const register = async (req, res) => {
          email: req.body.email,
          passwordHash: hash,
      })
- 
+
      const user = await doc.save();
- 
+
      const token = jwt.sign({
          _id: user._id,
      }, process.env.JWT_SECRET_KEY,
      {
          expiresIn: '24h'
      },)
- 
+
      const {passwordHash, ...userData} = user._doc
- 
+
      res.json({
          ...userData,
          token,})
- 
+
     } catch (err) {
      console.log(err)
      res.status(500).json({
@@ -42,7 +42,7 @@ export const register = async (req, res) => {
  };
 
 export const login = async (req, res) => {
-    try{
+    try {
         const user = await UserModel.findOne({email: req.body.email})
 
         if(!user){
@@ -73,7 +73,7 @@ export const login = async (req, res) => {
             token,})
 
     } catch(err) {
-        console.log(err)
+        console.error(err)
         res.status(500).json({
         message: "Не удалось авторизоваться",
    })
@@ -91,10 +91,10 @@ export const getUser = async (req, res) => {
         }
 
         const {passwordHash, ...userData} = user._doc
-    
+
 
         res.json(userData)
-        
+
     } catch(err){
         console.log(err);
         res.status(500).json({
@@ -120,10 +120,10 @@ export const getUserById = async (req, res) => {
         }
 
         const {passwordHash, ...userData} = user._doc
-    
+
 
         res.json(userData)
-        
+
     } catch(err){
         console.log(err);
         res.status(500).json({
@@ -149,7 +149,7 @@ export const getAllUsers = async (req, res) => {
 export const updateUser = async (req, res) => {
     try {
         const user = await UserModel.findById(req.userId)
-        
+
         if (!user) {
             return res.status(404).json({
                 message: 'Пользователь не найден'
