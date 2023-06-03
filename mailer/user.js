@@ -27,7 +27,7 @@ export async function notifySubscriberCreateNewCard(user, card) {
 
   const htmlContent = html
     .replaceAll('{URL_LOGO}', `${process.env.currentDomain}${card.imgUrl?.[0]}`)
-    .replaceAll('{URL_seller-Name}', user.username)
+    .replaceAll('{URL_seller-Name}', card.author.username)
     .replaceAll('{URL_IMAGE_ORDER}', `${process.env.currentDomain}${card.imgUrl?.[0]}`)
     .replaceAll('{URL_Name-of-work}', card.name)
     .replaceAll('{URL_CHANGE}', `${process.env.currentDomain}/account/SettingsMenu`)
