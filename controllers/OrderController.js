@@ -35,8 +35,8 @@ export const getItem = async (req, res) => {
         ],
         status: req.query.status || { $in: [ 0, 1, 2 ] }
     })
-    .populate('buyer')
-    .populate('seller')
+    .populate('buyer', '-passwordHash')
+    .populate('seller', '-passwordHash')
     .populate('card')
     .sort({
         createdAt: -1,
