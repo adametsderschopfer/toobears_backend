@@ -12,7 +12,7 @@ export const get = async (req, res) => {
                 { buyer: req.userId },
                 { seller: req.userId }
             ],
-            status: req.query.status || { $in: [ 0, 1, 2 ] }
+            status: req.query.status || { $in: [ 0, 1, 2, 3 ] }
         }).populate('card').sort({
             createdAt: -1,
         }).exec()
@@ -33,7 +33,7 @@ export const getItem = async (req, res) => {
             { buyer: req.userId },
             { seller: req.userId }
         ],
-        status: req.query.status || { $in: [ 0, 1, 2 ] }
+        status: req.query.status || { $in: [ 0, 1, 2, 3 ] }
     })
     .populate('buyer', '-passwordHash')
     .populate('seller', '-passwordHash')
