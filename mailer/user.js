@@ -37,5 +37,6 @@ export async function notifySubscriberCreateNewCard(user, card) {
     subject: 'New Card',
     html: htmlContent,
   };
-  await transporter.sendMail(mailOptions);
+  const info = await transporter.sendMail(mailOptions);
+  console.log('info', info);
 }
