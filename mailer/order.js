@@ -24,10 +24,10 @@ export async function notifySellerMakeOrder(order) {
   const html = await readSource('./templates/order/seller-notification.html');
 
   const htmlContent = html
-    .replaceAll('{URL_IMAGE_ORDER}', `${process.env.currentDomain}/api/${order.card?.imgUrl?.[0]}`)
+    .replaceAll('{URL_IMAGE_ORDER}', `${process.env.currentDomain}/api${order.card?.imgUrl?.[0]}`)
     .replaceAll('{URL_TO_ORDER}', `${process.env.currentDomain}/orderInfo/${order._id}`)
     .replaceAll('{URL_NAME_BUYER}', `${order.buyer.username}`)
-    .replaceAll('{URL_COUNTRY_BUYER}', `${process.env.currentDomain}/orderInfo/${order.buyer.country}`)
+    .replaceAll('{URL_COUNTRY_BUYER}', order.buyer.country)
     .replaceAll('{URL_NAME}', order._id);
 
   const mailOptions = {
