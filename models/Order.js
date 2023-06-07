@@ -60,17 +60,36 @@ const OrderSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-OrderSchema.post('save', async function (order) {
-    const foundOrder = await Order.findById(order._id)
+// Post save hook
+OrderSchema.post('save', async function (doc, next) {
+    const order = await Order.findById(doc._id)
         .populate('buyer seller', 'username email country')
         .populate('card', 'imgUrl');
-    console.log('foundOrder', foundOrder);
-    if (this._update && this._update.$set.status === 0) {
-        notifySellerMakeOrder(foundOrder);
+
+    if (order.status === 0) {
+        notifySellerMakeOrder(order);
     }
-    if (this._update && this._update.$set.status === 1) {
-        notifyBuyerMakeOrder(foundOrder);
+    if (order.status === 1) {
+        notifyBuyerMakeOrder(order);
     }
+
+    next();
+});
+
+// Pre update hook
+OrderSchema.pre('findOneAndUpdate', async function(next) {
+    const update = this.getUpdate();
+    if (update.$set && update.$set.status !== undefined) {
+        const order = await this.model.findOne(this.getFilter())
+            .populate('buyer seller', 'username email country')
+            .populate('card', 'imgUrl');
+
+        if (update.$set.status === 1) {
+            notifyBuyerMakeOrder(order);
+        }
+    }
+
+    next();
 });
 
 const Order = mongoose.model('Order', OrderSchema)
