@@ -64,6 +64,7 @@ OrderSchema.post('save', async function (order) {
     const foundOrder = await Order.findById(order._id)
         .populate('buyer seller', 'username email country')
         .populate('card', 'imgUrl');
+    console.log('foundOrder', foundOrder);
     if (this._update && this._update.$set.status === 0) {
         notifySellerMakeOrder(foundOrder);
     }

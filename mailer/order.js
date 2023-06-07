@@ -10,7 +10,7 @@ export async function notifyBuyerMakeOrder(order) {
   .replaceAll('{URL_NAME_SHOP}', order.seller.shopname)
   .replaceAll('{URL_IMAGE_ORDER}', `${process.env.currentDomain}/api${order.card.imgUrl?.[0]}`)
   .replaceAll('{URL_TO_ORDER}', `${process.env.currentDomain}/orderInfo/${order._id}`);
-
+  console.log('order.buyer.email', order.buyer.email);
   const mailOptions = {
     from: process.env.SMTP_USER,
     to: order.buyer.email,
@@ -30,7 +30,7 @@ export async function notifySellerMakeOrder(order) {
     .replaceAll('{URL_NAME_BUYER}', order.buyer.username)
     .replaceAll('{URL_COUNTRY_BUYER}', order.buyer.country)
     .replaceAll('{URL_NAME}', order._id);
-
+  console.log('order.seller.email', order.seller.email);
   const mailOptions = {
     from: process.env.SMTP_USER,
     to: order.seller.email,
