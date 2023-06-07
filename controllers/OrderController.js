@@ -124,10 +124,12 @@ export const create = async (req, res) => {
 
 export const updateDelivery = async (req, res) => {
     try {
-        await OrderModel.updateOne({
+        await OrderModel.findOneAndUpdate({
             _id: req.params.id
         }, {
-            deliveryCode: req.body.code || '',
+            $set: {
+                deliveryCode: req.body.code || '',
+            }
         })
 
         res.json({
@@ -143,11 +145,13 @@ export const updateDelivery = async (req, res) => {
 
 export const update = async (req, res) => {
     try {
-        await OrderModel.updateOne({
+        await OrderModel.findOneAndUpdate({
             _id: req.params.id
         }, {
-            status: req.body.status,
-        })
+            $set: {
+                status: Number(req.body.status),
+            }
+        });
 
         res.json({
             success: true,
