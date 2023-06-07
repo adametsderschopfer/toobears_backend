@@ -17,7 +17,8 @@ export async function notifyBuyerMakeOrder(order) {
     subject: 'New Order',
     html: htmlContent,
   };
-  await transporter.sendMail(mailOptions);
+  const info = await transporter.sendMail(mailOptions);
+  console.log('info', info);
 }
 
 export async function notifySellerMakeOrder(order) {
@@ -36,7 +37,8 @@ export async function notifySellerMakeOrder(order) {
     subject: 'New Order',
     html: htmlContent
   };
-  await transporter.sendMail(mailOptions);
+  const info = await transporter.sendMail(mailOptions);
+  console.log('info', info);
 }
 
 
