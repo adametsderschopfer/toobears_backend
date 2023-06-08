@@ -1,11 +1,11 @@
 import transporter from './index.js';
 import { readSource } from './reader.js';
 
-export async function notifyNewMessage(user, message) {
+export async function notifyNewMessage(user, message, senderUser) {
   const html = await readSource('./templates/chat/new-message.html');
   const htmlContent = html
-    .replaceAll('{URL_AVATR}', `${process.env.currentDomain}/api/${user.avatarUrl}`)
-    .replaceAll('{URL_NAME_FROM}', message.from)
+    .replaceAll('{URL_AVATR}', `${process.env.currentDomain}/api/${senderUser.avatarUrl}`)
+    .replaceAll('{URL_NAME_FROM}', senderUser.username)
     .replaceAll('{URL_TEXT}', message.text)
     .replaceAll('{URL_DATE}', message.createdAt.toLocaleDateString());
 
