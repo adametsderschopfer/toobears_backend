@@ -23,7 +23,7 @@ const ChatSchema = new mongoose.Schema({
 ChatSchema.post('updateOne', async function() {
     console.log('this._update', this._update);
     if (this._update?.$set?.text) {
-        const currentChat = await this.model.findOne().populate('users lastMessage');
+        const currentChat = await this.model.findOne(this._conditions).populate('users lastMessage');
         console.log('currentChat from updateOne middleware', currentChat);
         currentChat.users.forEach(user => {
             notifyNewMessage(user, currentChat.lastMessage);
