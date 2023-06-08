@@ -9,6 +9,10 @@ const ChatSchema = new mongoose.Schema({
     text:{
         type: String,
     },
+    lastMessage: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Message',
+        default: null,
+    },
     time:{
         type: Date,
         default: Date.now,
@@ -19,10 +23,9 @@ const ChatSchema = new mongoose.Schema({
 
 ChatSchema.post('updateOne', async function() {
     if (this._update?.$set?.text) {
-        const currentChat = await this.model.findOne().populate('users text');
-        const message = await MessageModel.findOne({text: currentChat.text});
+        const currentChat = await this.model.findOne().populate('users lastMessage');
         currentChat.users.forEach(user => {
-            notifyNewMessage(user, message);
+            notifyNewMessage(user, currentChat.lastMessage);
         })
     }
 })

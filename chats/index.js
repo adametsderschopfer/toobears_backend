@@ -17,7 +17,10 @@ class Chats {
 		await ChatModel.updateOne({
             _id: chat
         }, {
+					$set: {
             text: text,
+						lastMessage: message._id,
+					}
         })
 	}
 
