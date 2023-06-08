@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import ChatModel from './Chat.js';
 
 const MessageSchema = new mongoose.Schema({
     chat: {
@@ -19,6 +20,15 @@ const MessageSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true,
+});
+
+MessageSchema.post('save', async function(message) {
+    const chat = await ChatModel.findById(message.chat);
+
+    if (chat) {
+        chat.lastMessage = message._id;
+        await chat.save();
+    }
 });
 
 export default mongoose.model('Message', MessageSchema)
