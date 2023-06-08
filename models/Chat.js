@@ -21,12 +21,22 @@ const ChatSchema = new mongoose.Schema({
 });
 
 ChatSchema.post('updateOne', async function() {
+    console.log('this._update', this._update);
     if (this._update?.$set?.text) {
         const currentChat = await this.model.findOne().populate('users lastMessage');
+        console.log('currentChat from updateOne middleware', currentChat);
         currentChat.users.forEach(user => {
             notifyNewMessage(user, currentChat.lastMessage);
         })
     }
+})
+
+ChatSchema.post('save', async function(doc, next) {
+    const currentChat = await Chat.findById(doc._id).populate('users lastMessage');
+    console.log('currentChat from save middleware', currentChat);
+    currentChat.users.forEach(user => {
+        notifyNewMessage(user, currentChat.lastMessage);
+    })
 })
 
 const Chat =  mongoose.model('Chat', ChatSchema)

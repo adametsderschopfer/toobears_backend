@@ -43,9 +43,19 @@ export const initChat = async (from, to, text = '', attachment = null) => {
     }
     if (!chat) {
         try {
+            const messageDoc = new MessageModel({
+                chat: chat.id,
+                from: from,
+                text: text,
+                time: time,
+                attachment: attachment
+            })
+            const message = await messageDoc.save()
+
             const doc = new ChatModel({
                 users: users,
                 text: text,
+                lastMessage: message.id,
             })
             chat = await doc.save();
         } catch (err) {
@@ -55,13 +65,5 @@ export const initChat = async (from, to, text = '', attachment = null) => {
 
     const time = (new Date()).toLocaleString('ru')
 
-    const doc = new MessageModel({
-        chat: chat.id,
-        from: from,
-        text: text,
-        time: time,
-        attachment: attachment
-    })
-    const message = await doc.save()
     return (chat)
 }
