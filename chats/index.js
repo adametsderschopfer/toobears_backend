@@ -6,31 +6,34 @@ import ChatModel from "../models/Chat.js"
 import jwt from 'jsonwebtoken'
 
 class Chats {
-	constructor () {
+	constructor() {
 		this.io = null
 	}
 
-	async pushHistory ({ chat, from, text, time, attachment }) {
+	async pushHistory({ chat, from, text, time, attachment }) {
+		console.log('pushHistory');
+		console.log('from', from);
+		console.log('text', text);
 		const doc = new MessageModel({ chat, from, text, time, attachment })
-        const message = await doc.save()
+		const message = await doc.save()
 
 		await ChatModel.updateOne({
-            _id: chat
-        }, {
-					$set: {
-            text: text,
-						lastMessage: message._id,
-					}
-        })
+			_id: chat
+		}, {
+			$set: {
+				text: text,
+				lastMessage: message._id,
+			}
+		})
 	}
 
-	onConnection (socket) {
+	onConnection(socket) {
 		socket.user = {}
 		socket.user.id = null
 		socket.user.auth = false
 
 		socket.on('connection', (token) => {
-			console.log('connected')
+			console.log('connected to chats')
 			try {
 				const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
@@ -68,7 +71,7 @@ class Chats {
 		})
 	}
 
-	run (server) {
+	run(server) {
 		console.log('chats run')
 		this.io = new Server()
 		this.io.attach(server)
