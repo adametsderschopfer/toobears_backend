@@ -64,7 +64,7 @@ const OrderSchema = new mongoose.Schema({
 OrderSchema.post('save', async function (doc, next) {
     const order = await Order.findById(doc._id)
         .populate('buyer seller', 'username email country')
-        .populate('card', 'imgUrl');
+        .populate('card', 'imgUrl name');
 
     if (order.status === 0) {
         notifySellerMakeOrder(order);
