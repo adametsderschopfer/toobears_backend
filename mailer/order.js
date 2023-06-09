@@ -29,7 +29,7 @@ export async function notifySellerMakeOrder(order) {
     .replaceAll('{URL_TO_ORDER}', `${process.env.currentDomain}/orderInfo/${order._id}`)
     .replaceAll('{URL_NAME_BUYER}', order.buyer.username)
     .replaceAll('{URL_COUNTRY_BUYER}', order.buyer.country)
-    .replaceAll('{URL_NAME}', order._id);
+    .replaceAll('{URL_NAME}', order.card.name);
   console.log('order.seller.email', order.seller.email);
   const mailOptions = {
     from: process.env.SMTP_USER,
