@@ -6,7 +6,7 @@ export async function notifyNewMessage(user, message, senderUser) {
   const htmlContent = html
     .replaceAll('{URL_AVATR}', `${process.env.currentDomain}/api/${senderUser.avatarUrl}`)
     .replaceAll('{URL_NAME_FROM}', senderUser.username)
-    .replaceAll('{URL_TEXT}', message.text)
+    .replaceAll('{URL_TEXT}', message.text ?? `${process.env.currentDomain}/api${message.attachment}`)
     .replaceAll('{URL_DATE}', message.createdAt.toLocaleDateString());
 
   const mailOptions = {
