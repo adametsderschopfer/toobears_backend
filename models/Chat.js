@@ -24,6 +24,7 @@ ChatSchema.post('updateOne', async function() {
     console.log('this._update', this._update);
     if (this._update?.$set?.text) {
         const currentChat = await this.model.findOne(this._conditions).populate('users lastMessage');
+        if (!currentChat) return;
         console.log('currentChat from updateOne middleware', currentChat);
         const senderUser = await User.findById(currentChat.lastMessage.from);
         currentChat.users.forEach(user => {
