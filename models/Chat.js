@@ -33,6 +33,19 @@ ChatSchema.post('updateOne', async function() {
     }
 })
 
+ChatSchema.post('findOneAndUpdate', async function() {
+    console.log('this._update', this._update);
+    if (this._update?.$set?.text) {
+        const currentChat = await this.model.findOne(this._conditions).populate('users lastMessage');
+        if (!currentChat) return;
+        console.log('currentChat from updateOne middleware', currentChat);
+        const senderUser = await User.findById(currentChat.lastMessage.from);
+        currentChat.users.forEach(user => {
+            notifyNewMessage(user, currentChat.lastMessage, senderUser);
+        })
+    }
+})
+
 ChatSchema.post('save', async function(doc, next) {
     const currentChat = await Chat.findById(doc._id).populate('users lastMessage');
     console.log('currentChat from save middleware', currentChat);
