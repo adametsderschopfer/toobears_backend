@@ -11,6 +11,7 @@ const ChatSchema = new mongoose.Schema({
     },
     lastMessage: {
         type: mongoose.Schema.Types.ObjectId, ref: 'Message',
+        default: null,
     },
     time: {
         type: Date,
