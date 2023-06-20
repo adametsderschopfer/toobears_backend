@@ -15,6 +15,10 @@ export async function notifyNewMessage(user, message, senderUser) {
     subject: 'New message in chat',
     html: htmlContent
   };
-  const info = await transporter.sendMail(mailOptions);
-  console.log('info', info);
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('info', info);
+  } catch (e) {
+    console.error('mail send error', e)
+  }
 }

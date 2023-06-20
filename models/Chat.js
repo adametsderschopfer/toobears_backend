@@ -46,11 +46,9 @@ ChatSchema.post('findOneAndUpdate', async function () {
 ChatSchema.post('save', async function (doc, next) {
     const currentChat = await Chat.findById(doc._id).populate('users lastMessage');
     console.log('currentChat from save middleware', currentChat);
-    if (!currentChat || !currentChat.lastMessage.text) return;
+    if (!currentChat || !currentChat.lastMessage || !currentChat.lastMessage.text) return;
     const senderUser = await User.findById(currentChat.lastMessage.from);
-    currentChat.users.forEach(user => {
-        notifyNewMessage(user, currentChat.lastMessage, senderUser);
-    })
+    notifyNewMessage(currentChat.users[1], currentChat.lastMessage, senderUser);
     next();
 })
 

@@ -34,21 +34,24 @@ export const initChat = async (from, to, text = '', attachment = null) => {
     // чтобы создать чат мог только конкретный юзер
     const time = (new Date()).toLocaleString('ru')
     let chat = ''
-    const users = [from, to]
+    const users = [ from, to ]
+
     const messageDoc = new MessageModel({
-        chat: chat.id,
+        chat: null,
         from: from,
         text: text,
         time: time,
         attachment: attachment
     })
     const message = await messageDoc.save()
+    
     try {
         chat = await ChatModel.findOneAndUpdate(
             { users: { $all: users } },
             { $set: { lastMessage: message.id, text: message.text, } }
         )
-    } catch (err) {
+    } catch (e) {
+        console.error(err)
         return ({ error: err })
     }
     if (!chat) {
@@ -60,9 +63,13 @@ export const initChat = async (from, to, text = '', attachment = null) => {
             })
             chat = await doc.save();
         } catch (err) {
-            return ({ message: 'Не получилось создать чат' })
+            console.error(err)
+            return ({ message: 'Не получилось создать чат', error: err })
         }
     }
+
+    messageDoc.chat = chat.id
+    messageDoc.save()
 
     return (chat)
 }
