@@ -33,43 +33,27 @@ export const initChat = async (from, to, text = '', attachment = null) => {
     // тут можно воткнуть проверку на роль,
     // чтобы создать чат мог только конкретный юзер
     const time = (new Date()).toLocaleString('ru')
-    let chat = ''
     const users = [ from, to ]
 
+    let chat = await ChatModel.findOne(
+        { users: { $all: users } }
+    )
+
+    if (!chat) {
+        const doc = new ChatModel({
+            users: users,
+        })
+        chat = await doc.save()
+    }
+
     const messageDoc = new MessageModel({
-        chat: null,
+        chat: chat.id,
         from: from,
         text: text,
         time: time,
         attachment: attachment
     })
     const message = await messageDoc.save()
-    
-    try {
-        chat = await ChatModel.findOneAndUpdate(
-            { users: { $all: users } },
-            { $set: { lastMessage: message.id, text: message.text, } }
-        )
-    } catch (e) {
-        console.error(err)
-        return ({ error: err })
-    }
-    if (!chat) {
-        try {
-            const doc = new ChatModel({
-                users: users,
-                text: text,
-                lastMessage: message.id,
-            })
-            chat = await doc.save();
-        } catch (err) {
-            console.error(err)
-            return ({ message: 'Не получилось создать чат', error: err })
-        }
-    }
-
-    messageDoc.chat = chat.id
-    messageDoc.save()
 
     return (chat)
 }
