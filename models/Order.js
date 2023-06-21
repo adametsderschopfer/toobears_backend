@@ -53,12 +53,25 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    orderId: {
+        type: Number,
+        default: 1
+    },
     message: {
         type: String,
     },
 }, {
     timestamps: true,
 });
+
+OrderSchema.pre('save', async function (next) {
+    if (!this.isNew) {
+        return (next())
+    }
+    const lastOrder = await Order.find({}).sort({ orderId: -1 }).limit(1)
+    this.orderId = lastOrder ? lastOrder[0].orderId + 1 : 1
+    next()
+})
 
 // Post save hook
 OrderSchema.post('save', async function (doc, next) {
