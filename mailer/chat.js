@@ -10,7 +10,7 @@ export async function notifyNewMessage(user, message, senderUser) {
     .replaceAll('{URL_DATE}', message.createdAt.toLocaleDateString());
 
   const mailOptions = {
-    from: process.env.SMTP_USER,
+    from: process.env.MAIL_FROM,
     to: user.email,
     subject: 'New message in chat',
     html: htmlContent

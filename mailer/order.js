@@ -12,7 +12,7 @@ export async function notifyBuyerMakeOrder(order) {
   .replaceAll('{URL_TO_ORDER}', `${process.env.currentDomain}/orderInfo/${order._id}`);
   console.log('order.buyer.email', order.buyer.email);
   const mailOptions = {
-    from: process.env.SMTP_USER,
+    from: process.env.MAIL_FROM,
     to: order.buyer.email,
     subject: 'New Order',
     html: htmlContent,
@@ -32,7 +32,7 @@ export async function notifySellerMakeOrder(order) {
     .replaceAll('{URL_NAME}', order.card.name);
   console.log('order.seller.email', order.seller.email);
   const mailOptions = {
-    from: process.env.SMTP_USER,
+    from: process.env.MAIL_FROM,
     to: order.seller.email,
     subject: 'New Order',
     html: htmlContent
