@@ -88,28 +88,12 @@ export const remove = async (req, res) => {
 export const create = async (req, res) => {
     try {
         const card = await CardModel.findOne({ _id: req.body.card }).exec()
-        let chat = await Chat.findOne({
-            users: {
-                $all: [req.userId, card.author]
-            }
-        }).exec()
 
-        if(!chat) {
-            chat = new Chat({
-                users: [req.userId, card.author],
-            })
+        if (req.userId == card.author) {
+            return (res.status(500).json({
+                message: 'Нельзя купить у себя'
+            }))
         }
-
-        const message = new Message({
-            chat: chat._id,
-            user: req.userId,
-            text: req.body.text || '',
-        })
-
-        chat.lastMessage = message._id
-
-        await message.save()
-        await chat.save()
 
         const doc = new OrderModel({
             card: req.body.card,
@@ -134,8 +118,6 @@ export const create = async (req, res) => {
             entity: req.body.card
         })
         event.save()
-
-        await ChatsController.initChat(req.userId, card.author, req.body.text || '', req.body.attachment || null)
 
         res.json(post);
     } catch (err) {

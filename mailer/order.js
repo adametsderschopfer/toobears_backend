@@ -27,7 +27,7 @@ export async function notifySellerMakeOrder(order) {
   const htmlContent = html
     .replaceAll('{URL_IMAGE_ORDER}', `${process.env.currentDomain}/api${order.card?.imgUrl?.[0]}`)
     .replaceAll('{URL_TO_ORDER}', `${process.env.currentDomain}/orderInfo/${order._id}`)
-    .replaceAll('{URL_NAME_BUYER}', order.buyer.username)
+    .replaceAll('{URL_NAME_BUYER}', order.buyer.username + ' ' + order.buyer.surname)
     .replaceAll('{URL_COUNTRY_BUYER}', order.buyer.country)
     .replaceAll('{URL_NAME}', order.card.name);
   console.log('order.seller.email', order.seller.email);
