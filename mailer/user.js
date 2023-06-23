@@ -26,7 +26,7 @@ export async function notifySubscriberCreateNewCard(user, card) {
   const html = await readSource('./templates/order/buyer-new-work.html');
 
   const htmlContent = html
-    .replaceAll('{URL_seller-Name}', card.author.username)
+    .replaceAll('{URL_seller-Name}', card.author.username + ' ' + card.author.surname)
     .replaceAll('{URL_IMAGE_ORDER}', `${process.env.currentDomain}/api${card.imgUrl?.[0]}`)
     .replaceAll('{URL_Name-of-work}', card.name)
     .replaceAll('{URL_TO_ORDER}', `${process.env.currentDomain}/card/${card._id}`)
