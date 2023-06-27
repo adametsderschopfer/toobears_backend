@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken"
 import bcrypt from 'bcrypt'
 
 import UserModel from "../models/User.js";
+import SubscriberModel from "../models/Subscriber.js"
 import FeedEventModel from "../models/FeedEvent.js"
 
 export const register = async (req, res) => {
@@ -192,34 +193,25 @@ export const updateUser = async (req, res) => {
 
 export const subscribe = async (req, res) => {
     try {
-        const user = await UserModel.findById(req.params.id)
-
-        if (user.subscribed.indexOf(req.userId) !== -1) {
+        const subscriber = await SubscriberModel
+            .findOne({ speaker: req.params.id, listener: req.userId })
+        
+        if (subscriber) {
             return (res.json({ ok: true }))
         }
+
+        const doc = new SubscriberModel({
+            speaker: req.params.id,
+            listener: req.userId,
+        })
+        await doc.save();
 
         await UserModel.findByIdAndUpdate(
             {
                 _id: req.params.id,
             },
             {
-                $addToSet: { subscribed: req.userId },
                 $inc: { subsCount: 1 }
-            },
-            {
-                new: true
-            }
-        )
-
-        await UserModel.findByIdAndUpdate(
-            {
-                _id: req.userId,
-            },
-            {
-                $addToSet: { subscribe: req.params.id }
-            },
-            {
-                new: true
             }
         )
 
@@ -239,34 +231,21 @@ export const subscribe = async (req, res) => {
 
 export const unsubscribe = async (req, res) => {
     try {
-        const me = await UserModel.findById(req.userId)
-
-        if (me.subscribe.indexOf(req.params.id) == -1) {
+        const subscriber = await SubscriberModel
+            .findOne({ speaker: req.params.id, listener: req.userId })
+        
+        if (!subscriber) {
             return (res.json({ ok: true }))
         }
+
+        await subscriber.delete()
 
         await UserModel.findByIdAndUpdate(
             {
                 _id: req.params.id,
             },
             {
-                $pull: { subscribed: req.userId },
                 $inc: { subsCount: -1 }
-            },
-            {
-                new: true
-            }
-        )
-
-        await UserModel.findByIdAndUpdate(
-            {
-                _id: req.userId,
-            },
-            {
-                $pull: { subscribe: req.params.id }
-            },
-            {
-                new: true
             }
         )
 
@@ -283,15 +262,55 @@ export const unsubscribe = async (req, res) => {
     }
 }
 
+export const subEnableMail = async (req, res) => {
+    try {
+        await SubscriberModel.findByIdAndUpdate(
+            {
+                speaker: req.params.id,
+                listener: req.userId
+            },
+            {
+                enableEmail: true
+            }
+        )
+
+        res.json({ ok: true })
+    } catch (err) {
+        return res.json(err)
+    }
+}
+
+export const subDisableMail = async (req, res) => {
+    try {
+        await SubscriberModel.findByIdAndUpdate(
+            {
+                speaker: req.params.id,
+                listener: req.userId
+            },
+            {
+                enableEmail: false
+            }
+        )
+
+        res.json({ ok: true })
+    } catch (err) {
+        return res.json(err)
+
+    }
+}
+
 export const getMySubs = async (req, res) => {
     try {
-        const user = await UserModel.findById(req.userId)
+        const speakers = await SubscriberModel.find({ listener: req.userId })
         const list = await Promise.all(
-            user.subscribe.map((user) => {
-                return UserModel.findById(user._id).populate('cards')
-
+            speakers.map((sub) => {
+                const user = UserModel.findById(sub.speaker).populate('cards')
+                return user
             }),
         )
+
+        // не доделал
+
         res.json(list)
     } catch (err) {
         res.json(err)

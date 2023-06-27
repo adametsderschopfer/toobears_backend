@@ -63,6 +63,8 @@ app.patch('/auth/me', checkAuth, UserController.updateUser)
 
 app.patch('/users/subscribe/:id', checkAuth, UserController.subscribe)
 app.delete('/users/subscribe/:id', checkAuth, UserController.unsubscribe)
+app.patch('/users/subscribe/:id/mail', checkAuth, UserController.subEnableMail)
+app.delete('/users/subscribe/:id/mail', checkAuth, UserController.subDisableMail)
 
 app.get('/users/me/subscribed', checkAuth, UserController.getMySubs)
 
