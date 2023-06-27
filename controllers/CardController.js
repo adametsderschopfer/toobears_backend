@@ -31,10 +31,26 @@ export const getAll = async (req, res) => {
             }
             filter.price['$lt'] = req.query.price_to
         }
+        let returnAllCount = false
+        let limit = 10
+        let offset = 0
+        if (req.query.limit) {
+            returnAllCount = true
+            limit = parseInt(req.query.limit)
+        }
+        if (req.query.page) {
+            offset = (parseInt(req.query.page) - 1) * limit
+        }
         const cards = await CardModel.find(filter).populate('author').sort({
             createdAt: -1,
-        }).exec();
-        res.json(cards);
+        }).limit(limit).skip(offset).exec();
+        if (!returnAllCount) {
+            res.json(cards);
+        } else {
+            const count = await CardModel.find(filter).count()
+            const pages = Math.ceil(count / limit)
+            res.json({ items: cards, pages: pages })
+        }
     } catch (err) {
         console.log(err);
         res.status(500).json({
