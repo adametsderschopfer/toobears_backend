@@ -304,12 +304,14 @@ export const getMySubs = async (req, res) => {
         const speakers = await SubscriberModel.find({ listener: req.userId })
         const list = await Promise.all(
             speakers.map((sub) => {
-                const user = UserModel.findById(sub.speaker).populate('cards')
-                return user
+                return (UserModel.findById(sub.speaker).populate('cards'))
             }),
         )
 
-        // не доделал
+        list.map((item, index) => {
+            item._doc.enableEmail = speakers[index].enableEmail
+            return (item)
+        })
 
         res.json(list)
     } catch (err) {
