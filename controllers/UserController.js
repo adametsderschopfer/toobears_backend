@@ -264,7 +264,7 @@ export const unsubscribe = async (req, res) => {
 
 export const subEnableMail = async (req, res) => {
     try {
-        await SubscriberModel.findByIdAndUpdate(
+        await SubscriberModel.updateOne(
             {
                 speaker: req.params.id,
                 listener: req.userId
@@ -282,7 +282,7 @@ export const subEnableMail = async (req, res) => {
 
 export const subDisableMail = async (req, res) => {
     try {
-        await SubscriberModel.findByIdAndUpdate(
+        await SubscriberModel.updateOne(
             {
                 speaker: req.params.id,
                 listener: req.userId
