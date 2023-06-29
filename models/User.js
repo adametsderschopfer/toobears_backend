@@ -84,6 +84,25 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    deliveryDescription: {
+        type: String,
+        default: ''
+    },
+    paymentDescription: {
+        type: String,
+        default: ''
+    },
+    delivery: [{
+        destPrice:[{
+            type: String,
+        }],
+        destination:[{
+            type: String,
+       }],
+        destCurrency:[{
+            type: String,
+        }],
+    }],
 }, {
     timestamps: true,
 });

@@ -178,6 +178,13 @@ export const updateUser = async (req, res) => {
             tgUrl: req.body.tgUrl,
             instUrl: req.body.instUrl,
             vkUrl: req.body.vkUrl,
+            paymentDescription: req.body.paymentDescription,
+            deliveryDescription: req.body.deliveryDescription,
+            delivery: [{
+                destPrice: req.body.destPrice,
+                destination: req.body.destination,
+                destCurrency: req.body.destCurrency,
+            }],
         })
 
         res.json({
