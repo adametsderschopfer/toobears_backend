@@ -22,6 +22,22 @@ export async function notifyChangePassword(user) {
   await transporter.sendMail(mailOptions);
 }
 
+export async function notifyForgotPassword(user, password) {
+  const html = await readSource('./templates/user/reset-password.html');
+
+  const htmlContent = html
+    .replaceAll('{USER_NAME}', user.username + ' ' + user.surname)
+    .replaceAll('{PASSWORD}', password)
+
+  const mailOptions = {
+    from: process.env.MAIL_FROM,
+    to: user.email,
+    subject: 'Password has changed',
+    html: htmlContent
+  };
+  await transporter.sendMail(mailOptions);
+}
+
 export async function notifySubscriberCreateNewCard(user, card) {
   const html = await readSource('./templates/order/buyer-new-work.html');
 

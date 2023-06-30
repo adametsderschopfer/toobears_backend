@@ -2,7 +2,7 @@ import express from "express"
 import multer from "multer"
 import mongoose from 'mongoose'
 import cors from "cors"
-import { registerValidator, loginValidator, cardCreateValidation } from './validation.js'
+import { registerValidator, loginValidator, forgotValidator, cardCreateValidation } from './validation.js'
 import checkAuth from './utils/checkAuth.js'
 import * as UserController from './controllers/UserController.js'
 import * as CardController from './controllers/CardController.js'
@@ -52,6 +52,8 @@ app.use('/uploads', express.static('uploads'))
 app.post('/auth/register', registerValidator, handleValidErrors, UserController.register);
 
 app.post('/auth/login', loginValidator, handleValidErrors, UserController.login)
+
+app.post('/auth/forgot', forgotValidator, handleValidErrors, UserController.forgot)
 
 app.get('/auth/me', checkAuth, UserController.getUser)
 

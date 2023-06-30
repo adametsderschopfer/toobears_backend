@@ -5,6 +5,8 @@ import UserModel from "../models/User.js";
 import SubscriberModel from "../models/Subscriber.js"
 import FeedEventModel from "../models/FeedEvent.js"
 
+import { notifyForgotPassword } from '../mailer/user.js';
+
 export const register = async (req, res) => {
     try {
         const password = req.body.password;
@@ -85,6 +87,46 @@ export const login = async (req, res) => {
         })
     }
 };
+
+function generatePassword(length = 10) {
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let resp = '';
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        resp += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return resp;
+}
+
+export const forgot = async (req, res) => {
+    try {
+        const user = await UserModel.findOne({ email: req.body.email })
+
+        if (!user) {
+            return (res.status(500).json({
+                message: "Не удалось отправить запрос на сброс пароля",
+            }))
+        }
+
+        const password = generatePassword(10);
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+
+        await user.updateOne({
+            passwordHash: hash
+        })
+
+        notifyForgotPassword(user, password)
+
+        res.json({
+            ok: true
+        })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({
+            message: "Не удалось отправить запрос на сброс пароля",
+        })
+    }
+}
 
 export const getUser = async (req, res) => {
     try {

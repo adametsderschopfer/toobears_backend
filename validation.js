@@ -13,6 +13,10 @@ export const registerValidator = [
     body('avatarUrl').optional().isURL(),
 ];
 
+export const forgotValidator = [
+    body('email', 'Неверный формат почты').isEmail(),
+];
+
 export const cardCreateValidation = [
     body('name', 'Введите название').isLength({min: 1}).isString(),
     body('price', 'Введите стоимость').isNumeric(),
