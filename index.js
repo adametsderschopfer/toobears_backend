@@ -14,6 +14,7 @@ import transporter from './mailer/index.js';
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
+import sharp from 'sharp'
 
 import { chats } from "./chats/index.js"
 
@@ -73,9 +74,12 @@ app.get('/users/me/subscribed', checkAuth, UserController.getMySubs)
 app.post('/upload', checkAuth, upload.array('images', 6), (req, res) => {
     res.json({
         urls: req.files.map(function (file) {
-            return `/uploads/${req.userId}/${file.originalname}`
+        	const path = `/uploads/${req.userId}/630_${file.originalname}`
+        	sharp(file.path)
+        		.resize({ width: 630 })
+        		.toFile('.' + path)
+            return path
         })
-
     })
 })
 
