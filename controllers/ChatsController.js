@@ -46,6 +46,10 @@ export const initChat = async (from, to, text = '', attachment = null) => {
         chat = await doc.save()
     }
 
+    if (text == '' && attachment == null) {
+        return (chat)
+    }
+
     const messageDoc = new MessageModel({
         chat: chat.id,
         from: from,

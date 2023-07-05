@@ -38,7 +38,7 @@ const storage = multer.diskStorage({
         cb(null, patch)
     },
     filename: (req, files, cb) => {
-        cb(null, files.originalname)
+        cb(null, (new Date().getTime()) + '_' + files.originalname)
     },
 })
 
@@ -74,10 +74,10 @@ app.get('/users/me/subscribed', checkAuth, UserController.getMySubs)
 app.post('/upload', checkAuth, upload.array('images', 6), (req, res) => {
     res.json({
         urls: req.files.map(function (file) {
-        	const path = `/uploads/${req.userId}/630_${file.originalname}`
-        	sharp(file.path)
-        		.resize({ width: 630 })
-        		.toFile('.' + path)
+            const path = `/uploads/${req.userId}/630_${file.filename}`
+            sharp(file.path)
+                .resize({ width: 630 })
+                .toFile('.' + path)
             return path
         })
     })
