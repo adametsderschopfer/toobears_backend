@@ -4,7 +4,7 @@ import MessageModel from "../models/Message.js"
 
 export const getAll = async (req, res) => {
     try {
-        const chats = await ChatModel.find({ users: req.userId }).populate('users').exec()
+        const chats = await ChatModel.find({ users: req.userId }).sort({ updatedAt: -1 }).populate('users').exec()
         res.json(chats)
     } catch (err) {
         console.log(err);
