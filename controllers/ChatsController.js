@@ -16,12 +16,12 @@ export const getAll = async (req, res) => {
 
 export const getMessages = async (req, res) => {
     // проверяем, состоит ли юзер в этом чате
-    const chats = await ChatModel.find({ _id: req.params.id, users: req.userId }).exec()
-    if (!chats.length) {
-        res.json({ message: 'Нет доступа к сообщениям' })
-        return (false)
-    }
     try {
+        const chats = await ChatModel.find({ _id: req.params.id, users: req.userId }).exec()
+        if (!chats.length) {
+            res.json({ message: 'Нет доступа к сообщениям' })
+            return (false)
+        }
         const messages = await MessageModel.find({ chat: req.params.id }).exec()
         res.json(messages)
     } catch (err) {
