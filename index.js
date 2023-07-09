@@ -9,6 +9,7 @@ import * as CardController from './controllers/CardController.js'
 import * as ChatsController from './controllers/ChatsController.js'
 import * as OrderController from './controllers/OrderController.js'
 import * as FeedController from './controllers/FeedController.js'
+import * as SearchController from './controllers/SearchController.js'
 import handleValidErrors from "./utils/handleValidErrors.js"
 import transporter from './mailer/index.js';
 import fs from 'fs'
@@ -61,6 +62,8 @@ app.get('/auth/me', checkAuth, UserController.getUser)
 app.get('/users/:id', UserController.getUserById)
 
 app.get('/users', UserController.getAllUsers)
+
+app.get('/search', SearchController.search)
 
 app.patch('/auth/me', checkAuth, UserController.updateUser)
 
