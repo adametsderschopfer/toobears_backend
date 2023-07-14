@@ -98,7 +98,7 @@ const UserSchema = new mongoose.Schema({
         }],
         destination:[{
             type: String,
-       }],
+       	}],
         destCurrency:[{
             type: String,
         }],

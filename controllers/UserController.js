@@ -19,6 +19,7 @@ export const register = async (req, res) => {
             surname: req.body.surname,
             email: req.body.email,
             passwordHash: hash,
+            delivery: [{ destPrice: [], destination: [], destCurrency: [] }],
         })
 
         const user = await doc.save();
@@ -208,7 +209,6 @@ export const updateUser = async (req, res) => {
             _id: user
         }, {
             shopname: req.body.shopname,
-            shortlink: req.body.shortlink,
             bannerUrl: req.body.bannerUrl,
             avatarUrl: req.body.avatarUrl,
             status: req.body.status,
@@ -234,6 +234,43 @@ export const updateUser = async (req, res) => {
         })
     } catch (err) {
         console.log(err)
+        res.status(500).json({
+            message: err
+        })
+    }
+}
+
+export const updateShortlink = async (req, res) => {
+    try {
+        const isBusy = await UserModel.findOne({ 
+            shortlink: req.body.shortlink
+        })
+        if (isBusy) {
+            return res.status(500).json({
+                message: 'Короткая ссылка занята',
+                u: isBusy
+            })
+        }
+
+        const user = await UserModel.findById(req.userId)
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'Пользователь не найден'
+            })
+        }
+
+        await UserModel.updateOne({
+            _id: user
+        }, {
+            shortlink: req.body.shortlink
+        })
+
+        res.json({
+            success: true,
+        })
+    } catch (err) {
+        console.error(err)
         res.status(500).json({
             message: err
         })

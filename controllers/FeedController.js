@@ -11,6 +11,7 @@ export const get = async (req, res) => {
             filter = {
                 $or: [
                     { 'entity': { $in: user.cards } },
+                    { 'entity': req.userId },
                     { 'user': req.userId },
                 ]
             }

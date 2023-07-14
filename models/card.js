@@ -86,7 +86,7 @@ const CardSchema = new mongoose.Schema({
 CardSchema.post('save', async (card) => {
     const currentCard = await Card.findById(card._id).populate('author', 'imgUrl username surname shopname').populate('name imgUrl');
     if (!currentCard) return;
-    const listeners = await SubscriberModel.find({ speaker: currentCard.author })
+    const listeners = await SubscriberModel.find({ speaker: currentCard.author, enableEmail: true })
     listeners.forEach(async (subscriber) => {
         const user = await UserModel.findById(subscriber.listener).populate('email username');
         await notifySubscriberCreateNewCard(user, currentCard);

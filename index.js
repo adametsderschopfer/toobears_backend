@@ -66,6 +66,7 @@ app.get('/users', UserController.getAllUsers)
 app.get('/search', SearchController.search)
 
 app.patch('/auth/me', checkAuth, UserController.updateUser)
+app.patch('/auth/me/shortlink', checkAuth, UserController.updateShortlink)
 
 app.patch('/users/subscribe/:id', checkAuth, UserController.subscribe)
 app.delete('/users/subscribe/:id', checkAuth, UserController.unsubscribe)
