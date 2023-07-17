@@ -89,13 +89,13 @@ app.post('/upload', checkAuth, upload.array('images', 6), (req, res) => {
 
 app.post('/upload/banner', checkAuth, upload.single('banner'), (req, res) => {
     res.json({
-        url: `/uploads/${req.userId}/${req.file.originalname}`
+        url: `/uploads/${req.userId}/${req.file.filename}`
     })
 })
 
 app.post('/upload/avatar', checkAuth, upload.single('avatar'), (req, res) => {
     res.json({
-        url: `/uploads/${req.userId}/${req.file.originalname}`
+        url: `/uploads/${req.userId}/${req.file.filename}`
     })
 })
 
