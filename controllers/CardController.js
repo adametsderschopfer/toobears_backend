@@ -44,6 +44,7 @@ export const getAll = async (req, res) => {
         const cards = await CardModel.find(filter).populate('author').sort({
             createdAt: -1,
         }).limit(limit).skip(offset).exec();
+        
         if (!returnAllCount) {
             res.json(cards);
         } else {

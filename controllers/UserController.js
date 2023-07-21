@@ -277,6 +277,43 @@ export const updateShortlink = async (req, res) => {
     }
 }
 
+export const updatePassword = async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.userId)
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'Пользователь не найден'
+            })
+        }
+
+        const isValidPass = await bcrypt.compare(req.body.oldPassword, user._doc.passwordHash);
+
+        if (!isValidPass) {
+            return res.status(400).json({
+                message: 'Неверный пароль',
+            });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(req.body.newPassword, salt);
+
+        await user.updateOne({
+            passwordHash: hash
+        })
+
+        res.json({
+            success: true,
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: err
+        })
+    }
+}
+
+
 export const subscribe = async (req, res) => {
     try {
         const subscriber = await SubscriberModel

@@ -15,7 +15,7 @@ export const search = async (req, res) => {
             ],
             role: 'Seller',
         }
-        const usersFields = [ 'username', 'surname', 'shopname', 'subsCount', 'avatarUrl' ]
+        const usersFields = [ 'username', 'surname', 'shopname', 'subsCount', 'avatarUrl', 'shortlink' ]
         const users = await UserSchema.find(usersFilter, usersFields).exec()
         users.map((item, index) => {
             item._doc.type = 'user'
