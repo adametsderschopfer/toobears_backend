@@ -50,7 +50,7 @@ export async function notifySubscriberCreateNewCard(user, card) {
   const mailOptions = {
     from: process.env.MAIL_FROM,
     to: user.email,
-    subject: 'New Card',
+    subject: 'New Work',
     html: htmlContent,
   };
   const info = await transporter.sendMail(mailOptions);
