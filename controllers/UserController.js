@@ -425,19 +425,26 @@ export const subDisableMail = async (req, res) => {
 export const getMySubs = async (req, res) => {
     try {
         const speakers = await SubscriberModel.find({ listener: req.userId })
-        const list = await Promise.all(
+
+        let list = await Promise.all(
             speakers.map((sub) => {
                 return (UserModel.findById(sub.speaker).populate('cards'))
             }),
         )
 
         list.map((item, index) => {
+            if (!item) {
+                return (null)
+            }
             item._doc.enableEmail = speakers[index].enableEmail
             return (item)
         })
 
+        list = list.filter(v => v)
+
         res.json(list)
     } catch (err) {
-        res.json(err)
+        console.error(err)
+        res.json({ error: 500 })
     }
 }
