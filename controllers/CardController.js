@@ -5,6 +5,9 @@ import UserSchema from '../models/User.js'
 export const getAll = async (req, res) => {
     try {
         let filter = {}
+        if (req.query.cathegory) {
+            filter.cathegory = req.query.cathegory
+        }
         if (req.query.status) {
             filter.status = req.query.status
         }

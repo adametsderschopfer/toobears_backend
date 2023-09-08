@@ -10,6 +10,7 @@ import * as ChatsController from './controllers/ChatsController.js'
 import * as OrderController from './controllers/OrderController.js'
 import * as FeedController from './controllers/FeedController.js'
 import * as SearchController from './controllers/SearchController.js'
+import * as SupportController from './controllers/SupportController.js'
 import handleValidErrors from "./utils/handleValidErrors.js"
 import transporter from './mailer/index.js';
 import fs from 'fs'
@@ -126,11 +127,14 @@ app.get('/market/cards/:id', CardController.getUserCards)
 app.get('/orders', checkAuth, OrderController.get)
 app.get('/orders/:id', checkAuth, OrderController.getItem)
 app.post('/orders', checkAuth, OrderController.create)
+
 app.patch('/orders/:id', checkAuth, OrderController.update)
 app.patch('/orders/:id/delivery', checkAuth, OrderController.updateDelivery)
 app.delete('/orders/:id', checkAuth, OrderController.remove)
 
 app.get('/feed', checkAuth, FeedController.get)
+
+app.post('/support', SupportController.send)
 
 const server = http.createServer(app)
 console.log('Server is running')
