@@ -44,14 +44,14 @@ export const get = async (req, res) => {
             events.map(async (event) => {
                 if (!users[event.user]) {
                     users[event.user] = await UserModel.findById(event.user)
-                        .select('username surname avatarUrl shortlink')
+                        .select('username surname role avatarUrl shortlink')
                 }
                 if (event.type == 'user') {
                     if (users[event.entity]) {
                         return (true)
                     }
                     users[event.entity] = await UserModel.findById(event.entity)
-                        .select('username surname avatarUrl shortlink')
+                        .select('username surname role avatarUrl shortlink')
                     return (true)
                 }
                 if (event.type == 'card') {

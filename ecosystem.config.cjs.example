@@ -9,7 +9,14 @@ const env = {
 	SMTP_USER: 'SMTP_USER',
 	SMTP_USER_PASS: 'SMTP_USER_PASS',
 	MAIL_FROM: 'TooBears <info@toobears.com>',
-	currentDomain: 'https://toobears.com'
+
+	SUPPORT_ADDRESS: '',
+
+	SELLER_INVITE_CODE: '',
+
+	CAPTCHA_SECRET_KEY: '',
+
+	currentDomain: '',
 }
 
 module.exports = {

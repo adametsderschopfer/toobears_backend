@@ -10,7 +10,7 @@ export async function sendSupport(name, email, message) {
 
   const mailOptions = {
     from: process.env.MAIL_FROM,
-    to: process.env.MAIL_FROM,
+    to: process.env.SUPPORT_ADDRESS,
     subject: 'Support request',
     html: htmlContent
   };

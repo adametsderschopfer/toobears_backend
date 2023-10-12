@@ -1,14 +1,43 @@
 import jwt from "jsonwebtoken"
 import bcrypt from 'bcrypt'
 
+import fetch, { FormData } from 'node-fetch'
+
 import UserModel from "../models/User.js";
 import SubscriberModel from "../models/Subscriber.js"
 import FeedEventModel from "../models/FeedEvent.js"
 
 import { notifyForgotPassword } from '../mailer/user.js';
 
+async function checkCaptcha (response) {
+    const url = "https://www.google.com/recaptcha/api/siteverify"
+    const formData = new FormData()
+    formData.set('secret', process.env.CAPTCHA_SECRET_KEY)
+    formData.set('response', response)
+    const raw = await fetch(url, {
+        method: 'POST',
+        body: formData
+    })
+    const resp = await raw.json()
+    return (resp.success || false)
+}
+
 export const register = async (req, res) => {
     try {
+    	if (req.body.role == 'Seller') {
+    		if (req.body.code !== process.env.SELLER_INVITE_CODE) {
+    			return (res.status(500).json({
+	                message: "Неверный код приглашения",
+	            }))
+    		}
+    	}
+
+        if (!await checkCaptcha(req.body['g-recaptcha-response'])) {
+            return (res.status(500).json({
+                message: 'Ошибка прохождения капчи'
+            }))
+        }
+
         const password = req.body.password;
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
@@ -17,7 +46,7 @@ export const register = async (req, res) => {
             role: req.body.role,
             username: req.body.username,
             surname: req.body.surname,
-            email: req.body.email,
+            email: req.body.email.toLowerCase(),
             passwordHash: hash,
             delivery: [{ destPrice: [], destination: [], destCurrency: [] }],
         })
@@ -51,7 +80,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        const user = await UserModel.findOne({ email: req.body.email })
+        const user = await UserModel.findOne({ email: req.body.email.toLowerCase() })
 
         if (!user) {
             return res.status(404).json({

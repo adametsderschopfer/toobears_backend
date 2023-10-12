@@ -77,15 +77,23 @@ app.delete('/users/subscribe/:id/mail', checkAuth, UserController.subDisableMail
 
 app.get('/users/me/subscribed', checkAuth, UserController.getMySubs)
 
-app.post('/upload', checkAuth, upload.array('images', 6), (req, res) => {
-    res.json({
-        urls: req.files.map(function (file) {
+app.post('/upload', checkAuth, upload.array('images', 6), async (req, res) => {
+    let urls = []
+
+    for (let file of req.files) {
+        try {
             const path = `/uploads/${req.userId}/630_${file.filename}`
-            sharp(file.path)
+            await sharp(file.path)
                 .resize({ width: 630 })
                 .toFile('.' + path)
-            return path
-        })
+            urls.push(path)
+        } catch (err) {
+            // pass
+        }
+    }
+
+    res.json({
+        urls: urls
     })
 })
 
