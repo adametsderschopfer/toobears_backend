@@ -77,7 +77,7 @@ app.delete('/users/subscribe/:id/mail', checkAuth, UserController.subDisableMail
 
 app.get('/users/me/subscribed', checkAuth, UserController.getMySubs)
 
-app.post('/upload', checkAuth, upload.array('images', 6), async (req, res) => {
+app.post('/upload', checkAuth, upload.array('images', 30), async (req, res) => {
     let urls = []
 
     for (let file of req.files) {
